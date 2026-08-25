@@ -24,7 +24,7 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://ai-crm-vazc.onrender.com"],
+    allow_origins=["ai-crm-wheat.vercel.app"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
