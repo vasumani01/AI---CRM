@@ -55,5 +55,60 @@ def initialize_database():
         );
     """)
 
+    # Insert sample customer if it doesn't already exist
+    cursor.execute("""
+        INSERT OR IGNORE INTO customers
+        (name, email, company, phone)
+        VALUES (?, ?, ?, ?)
+    """, (
+        "John Smith",
+        "john@acme.com",
+        "Acme Corp",
+        "9876543210"
+    ))
+
+    # Get customer ID
+    cursor.execute("""
+        SELECT id FROM customers
+        WHERE email = ?
+    """, ("john@acme.com",))
+
+    customer = cursor.fetchone()
+
+    if customer:
+        customer_id = customer["id"]
+
+        # Insert sample deal if it doesn't already exist
+        cursor.execute("""
+            SELECT id FROM deals
+            WHERE customer_id = ? AND title = ?
+        """, (
+            customer_id,
+            "Acme CRM Implementation"
+        ))
+
+        existing_deal = cursor.fetchone()
+
+        if not existing_deal:
+            cursor.execute("""
+                INSERT INTO deals
+                (
+                    customer_id,
+                    title,
+                    amount,
+                    status,
+                    salesperson,
+                    last_updated
+                )
+                VALUES (?, ?, ?, ?, ?, ?)
+            """, (
+                customer_id,
+                "Acme CRM Implementation",
+                25000.00,
+                "New",
+                "Vasu",
+                "2026-08-25"
+            ))
+
     connection.commit()
     connection.close()
